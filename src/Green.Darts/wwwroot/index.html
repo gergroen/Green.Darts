@@ -7,22 +7,45 @@
     <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.1.min.js"></script>
 </head>
 <body>
-    <input id="buttonStartGame" type="button" value="Start game" />
+    <input id="buttonStartNewGame" type="button" value="Start new game" />
+    <input id="buttonCreateNewPlayer" type="button" value="Create new player" />
+    <br/>
+    <span id="eventLog"></span>
 
     <script type="text/javascript">
 
         var connection = $.hubConnection();
         var gameHub = connection.createHubProxy('GameHub');
+        var playerHub = connection.createHubProxy('PlayerHub');
 
         gameHub.on('NewGameStartedEvent', function (newGameStartedEvent) {
-            alert('GameId:' + newGameStartedEvent.GameId);
+            $('#eventLog').append('New game started with id:' + newGameStartedEvent.GameId + '<br/>');
+        });
+
+        playerHub.on('NewPlayerCreatedEvent', function (newPlayerCreatedEvent) {
+            $('#eventLog').append('New player created with id:' + newPlayerCreatedEvent.PlayerId + '<br/>');
         });
 
         connection.start().done(function () {
-            $('#buttonStartGame').click(function () {
-                alert('Send');
-                gameHub.invoke('NewGameStartedEvent', { GameId: '1AB060E2-E717-4451-82E1-4BCE6AC6E82E' });
+
+            $('#buttonStartNewGame').click(function () {
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ Name: 'Game1' }),
+                    url: '/api/game/StartNewGame',
+                    contentType: "application/json"
+                });
             });
+
+            $('#buttonCreateNewPlayer').click(function () {
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({ Name: 'Player1' }),
+                    url: '/api/player/CreateNewPlayer',
+                    contentType: "application/json"
+                });
+            });
+
         });
 
     </script>

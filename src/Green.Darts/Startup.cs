@@ -11,6 +11,7 @@ namespace Green.Darts
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
             services.AddSignalR(options =>
             {
                 options.Hubs.EnableDetailedErrors = true;
@@ -27,7 +28,10 @@ namespace Green.Darts
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors(p => p.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod().AllowCredentials());
+            app.UseMvc();
             app.UseFileServer();
+            app.UseWebSockets();
             app.UseSignalR();
         }
     }
