@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F3657360-7C5F-4E66-B14E-414570D166EC}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		nuget.config = nuget.config
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Green.Darts", "src\Green.Darts\Green.Darts.xproj", "{EC1D1EE3-8B29-4B9D-B0E0-0019A9FBC8CE}"
