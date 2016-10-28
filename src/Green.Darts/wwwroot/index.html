@@ -5,12 +5,39 @@
     <title></title>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.1.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <input id="buttonStartNewGame" type="button" value="Start new game" />
-    <input id="buttonCreateNewPlayer" type="button" value="Create new player" />
-    <br/>
-    <span id="eventLog"></span>
+    <div class="container">
+        <h1>Darts</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Games</h3>
+                    </div>
+                    <div class="panel-body">
+                        <span id="gameEventLog"></span>
+                    </div>
+                </div>
+                <input id="buttonStartNewGame" class="btn btn-default" type="button" value="Start new game" />
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Players</h3>
+                    </div>
+                    <div class="panel-body">
+                        <span id="playerEventLog"></span>
+                    </div>
+                </div>
+                <input id="buttonCreateNewPlayer" class="btn btn-default" type="button" value="Create new player" />
+            </div>
+        </div>
+
+    </div>
 
     <script type="text/javascript">
 
@@ -19,11 +46,11 @@
         var playerHub = connection.createHubProxy('PlayerHub');
 
         gameHub.on('NewGameStartedEvent', function (newGameStartedEvent) {
-            $('#eventLog').append('New game started with id:' + newGameStartedEvent.GameId + '<br/>');
+            $('#gameEventLog').append('New game started with id:' + newGameStartedEvent.GameId + '<br/>');
         });
 
         playerHub.on('NewPlayerCreatedEvent', function (newPlayerCreatedEvent) {
-            $('#eventLog').append('New player created with id:' + newPlayerCreatedEvent.PlayerId + '<br/>');
+            $('#playerEventLog').append('New player created with id:' + newPlayerCreatedEvent.PlayerId + '<br/>');
         });
 
         connection.start().done(function () {
