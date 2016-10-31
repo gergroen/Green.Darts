@@ -5,75 +5,89 @@
     <title></title>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.1.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-3.4.0.js"></script>
     <script src="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"></script>
     <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
     <div class="container">
-        <h1>Darts</h1>
+        <h1>Darts <span data-bind="text: connectionState"></span></h1>
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title">Games</h3>
                     </div>
-                    <div class="panel-body">
-                        <span id="gameEventLog"></span>
+                    <div class="panel-body" data-bind="foreach: gameEventLog">
+                        <span data-bind="text: $data"></span><br />
                     </div>
                 </div>
-                <input id="buttonStartNewGame" class="btn btn-default" type="button" value="Start new game" />
+                <input id="buttonStartNewGame" data-bind="click: onStartNewGameButtonClicked" class="btn btn-default" type="button" value="Start new game" />
             </div>
             <div class="col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title">Players</h3>
                     </div>
-                    <div class="panel-body">
-                        <span id="playerEventLog"></span>
+                    <div class="panel-body" data-bind="foreach: playerEventLog">
+                        <span data-bind="text: $data"></span><br />
                     </div>
                 </div>
-                <input id="buttonCreateNewPlayer" class="btn btn-default" type="button" value="Create new player" />
+                <input id="buttonCreateNewPlayer" data-bind="click: onCreateNewPlayerButtonClicked" class="btn btn-default" type="button" value="Create new player" />
             </div>
         </div>
 
     </div>
 
     <script type="text/javascript">
-
-        var connection = $.hubConnection();
-        var gameHub = connection.createHubProxy('GameHub');
-        var playerHub = connection.createHubProxy('PlayerHub');
-
-        gameHub.on('NewGameStartedEvent', function (newGameStartedEvent) {
-            $('#gameEventLog').append('New game started with id:' + newGameStartedEvent.GameId + '<br/>');
-        });
-
-        playerHub.on('NewPlayerCreatedEvent', function (newPlayerCreatedEvent) {
-            $('#playerEventLog').append('New player created with id:' + newPlayerCreatedEvent.PlayerId + '<br/>');
-        });
-
-        connection.start().done(function () {
-
-            $('#buttonStartNewGame').click(function () {
+        var viewmodel = {
+            gameEventLog: ko.observableArray(),
+            playerEventLog: ko.observableArray(),
+            connectionState: ko.observable('disconnected'),
+            onStartNewGameButtonClicked: function () {
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify({ Name: 'Game1' }),
                     url: '/api/game/StartNewGame',
                     contentType: "application/json"
                 });
-            });
-
-            $('#buttonCreateNewPlayer').click(function () {
+            },
+            onCreateNewPlayerButtonClicked: function () {
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify({ Name: 'Player1' }),
                     url: '/api/player/CreateNewPlayer',
                     contentType: "application/json"
                 });
-            });
+            },
+            onNewGameStartedEvent: function (newGameStartedEvent) {
+                viewmodel.gameEventLog.push('New game started with id:' + newGameStartedEvent.GameId);
+            },
+            onNewPlayerCreatedEvent: function (newPlayerCreatedEvent) {
+                viewmodel.playerEventLog.push('New player created with id:' + newPlayerCreatedEvent.PlayerId);
+            }
+        };
 
+        var connection = $.hubConnection();
+
+        var gameHub = connection.createHubProxy('GameHub');
+        gameHub.on('NewGameStartedEvent', viewmodel.onNewGameStartedEvent);
+
+        var playerHub = connection.createHubProxy('PlayerHub');
+        playerHub.on('NewPlayerCreatedEvent', viewmodel.onNewPlayerCreatedEvent);
+
+        connection.disconnected(function () {
+            setTimeout(function () {
+                connection.start();
+            }, 5000);
         });
+        connection.stateChanged(function connectionStateChanged(state) {
+            var stateConversion = { 0: 'connecting', 1: 'connected', 2: 'reconnecting', 4: 'disconnected' };
+            viewmodel.connectionState(stateConversion[state.newState]);
+        });
+        connection.start();
+        ko.applyBindings(viewmodel);
 
     </script>
 </body>
