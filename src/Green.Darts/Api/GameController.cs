@@ -15,7 +15,7 @@ namespace Green.Darts.Api
     public class GameController : Controller
     {
         private IHubContext _gameHub;
-        private static List<GameDto> _games = new List<GameDto>();
+        private static List<Game> _games = new List<Game>();
 
         public GameController(IConnectionManager connectionManager)
         {
@@ -23,13 +23,13 @@ namespace Green.Darts.Api
         }
 
         [HttpGet]
-        public GameDto Get(Guid id)
+        public Game Get(Guid id)
         {
             return _games.Single(x => x.Id == id);
         }
 
         [HttpGet]
-        public List<GameDto> GetAll()
+        public List<Game> GetAll()
         {
             return _games;
         }
@@ -37,7 +37,7 @@ namespace Green.Darts.Api
         [HttpPost]
         public void StartNewGame([FromBody]StartNewGameCommand startNewGameCommand)
         {
-            var game = new GameDto
+            var game = new Game
             {
                 Id = Guid.NewGuid(),
                 Name = startNewGameCommand.Name

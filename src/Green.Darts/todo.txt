@@ -1,0 +1,22 @@
+﻿Entity framework
+
+==Models==
+
+Federation
+
+Competition
+
+Division
+Club
+Team
+Program
+Player
+
+GameType
+Game
+Round
+Leg
+Set
+Turn
+Throw
+Result

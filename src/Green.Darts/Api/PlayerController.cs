@@ -15,7 +15,7 @@ namespace Green.Darts.Api
     public class PlayerController : Controller
     {
         private IHubContext _playerHub;
-        private static List<PlayerDto> _players = new List<PlayerDto>();
+        private static List<Player> _players = new List<Player>();
 
         public PlayerController(IConnectionManager connectionManager)
         {
@@ -23,13 +23,13 @@ namespace Green.Darts.Api
         }
 
         [HttpGet]
-        public PlayerDto Get(Guid id)
+        public Player Get(Guid id)
         {
             return _players.Single(x => x.Id == id);
         }
 
         [HttpGet]
-        public List<PlayerDto> GetAll()
+        public List<Player> GetAll()
         {
             return _players;
         }
@@ -37,7 +37,7 @@ namespace Green.Darts.Api
         [HttpPost]
         public void CreateNewPlayer([FromBody]CreateNewPlayerCommand createNewPlayerCommand)
         {
-            var player = new PlayerDto
+            var player = new Player
             {
                 Id = Guid.NewGuid(),
                 Name = createNewPlayerCommand.Name

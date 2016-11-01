@@ -2,7 +2,7 @@
 
 namespace Green.Darts.Model
 {
-    public class GameDto
+    public class Game
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
