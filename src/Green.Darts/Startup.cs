@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Green.Darts.Dao.EntityFrameworkCore;
+using Green.Darts.Model;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -11,6 +14,10 @@ namespace Green.Darts
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=GreenDartsDatabase;Trusted_Connection=True;";
+            services.AddDbContext<DartsDbContext>(options => options.UseSqlServer(connection));
+            services.AddTransient<IGameRepository>(c => new EntityFrameworkCoreGameRepository(c.GetService<DartsDbContext>()));
+            services.AddTransient<IPlayerRepository>(c => new EntityFrameworkCorePlayerRepository(c.GetService<DartsDbContext>()));
             services.AddMvc();
             services.AddSignalR(options =>
             {

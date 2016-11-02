@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Green.Darts.Api
 {
@@ -15,23 +15,24 @@ namespace Green.Darts.Api
     public class PlayerController : Controller
     {
         private IHubContext _playerHub;
-        private static List<Player> _players = new List<Player>();
+        private IPlayerRepository _playerRepository;
 
-        public PlayerController(IConnectionManager connectionManager)
+        public PlayerController(IConnectionManager connectionManager, IPlayerRepository playerRepository)
         {
             _playerHub = connectionManager.GetHubContext<PlayerHub>();
+            _playerRepository = playerRepository;
         }
 
         [HttpGet]
-        public Player Get(Guid id)
+        public async Task<Player> Get(Guid id)
         {
-            return _players.Single(x => x.Id == id);
+            return await _playerRepository.Get(id);
         }
 
         [HttpGet]
-        public List<Player> GetAll()
+        public async Task<List<Player>> GetAll()
         {
-            return _players;
+            return await _playerRepository.GetAll();
         }
 
         [HttpPost]
@@ -42,7 +43,7 @@ namespace Green.Darts.Api
                 Id = Guid.NewGuid(),
                 Name = createNewPlayerCommand.Name
             };
-            _players.Add(player);
+            _playerRepository.Save(player);
             _playerHub.Clients.All.NewPlayerCreatedEvent(new NewPlayerCreatedEvent { PlayerId = player.Id });
         }
     }

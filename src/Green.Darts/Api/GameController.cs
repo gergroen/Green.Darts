@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Green.Darts.Api
 {
@@ -15,23 +15,24 @@ namespace Green.Darts.Api
     public class GameController : Controller
     {
         private IHubContext _gameHub;
-        private static List<Game> _games = new List<Game>();
+        private IGameRepository _gameRepository;
 
-        public GameController(IConnectionManager connectionManager)
+        public GameController(IConnectionManager connectionManager, IGameRepository gameRepository)
         {
             _gameHub = connectionManager.GetHubContext<GameHub>();
+            _gameRepository = gameRepository;
         }
 
         [HttpGet]
-        public Game Get(Guid id)
+        public async Task<Game> Get(Guid id)
         {
-            return _games.Single(x => x.Id == id);
+            return await _gameRepository.Get(id);
         }
 
         [HttpGet]
-        public List<Game> GetAll()
+        public async Task<List<Game>> GetAll()
         {
-            return _games;
+            return await _gameRepository.GetAll();
         }
 
         [HttpPost]
@@ -42,7 +43,7 @@ namespace Green.Darts.Api
                 Id = Guid.NewGuid(),
                 Name = startNewGameCommand.Name
             };
-            _games.Add(game);
+            _gameRepository.Save(game);
             _gameHub.Clients.All.NewGameStartedEvent(new NewGameStartedEvent { GameId = game.Id });
         }
     }
