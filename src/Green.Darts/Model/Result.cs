@@ -7,5 +7,6 @@ namespace Green.Darts.Model
 {
     public class Result
     {
+        public Guid Id { get; set; }
     }
 }

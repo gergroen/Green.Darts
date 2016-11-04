@@ -20,3 +20,27 @@ Set
 Turn
 Throw
 Result
+
+Game {
+
+	Rounds: [
+	{
+		{
+			Name:
+			Sets: {
+				Legs: {
+					Throws: {
+						{ Score: "T20" },
+						{ Score: "T20" },
+						{ Score: "T20" }
+					}
+
+				}
+			
+			}
+		}
+
+	}]
+
+
+}

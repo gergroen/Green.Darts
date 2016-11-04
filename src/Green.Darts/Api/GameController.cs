@@ -40,7 +40,7 @@ namespace Green.Darts.Api
         {
             var game = new Game
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 Name = startNewGameCommand.Name
             };
             _gameRepository.Save(game);

@@ -5,7 +5,13 @@ using System.Threading.Tasks;
 
 namespace Green.Darts.Model
 {
-    public class GameType
+    public enum GameType
     {
+        Team701,
+        Single501,
+        Single301,
+        Double501,
+        Double301,
+        TacTic
     }
 }

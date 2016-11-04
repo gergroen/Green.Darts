@@ -9,7 +9,15 @@ namespace Green.Darts.Dao.EntityFrameworkCore
             : base(options)
         { }
 
-        public DbSet<Game> Games { get; set; }
+        //public DbSet<Club> Club { get; set; }
+        //public DbSet<Team> Teams { get; set; }
         public DbSet<Player> Players { get; set; }
+
+
+        //public DbSet<Federation> Federations { get; set; }
+        //public DbSet<Competition> Competitions { get; set; }
+        //public DbSet<Division> Divisions { get; set; }
+        public DbSet<Game> Games { get; set; }
+
     }
 }

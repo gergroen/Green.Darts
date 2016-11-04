@@ -7,5 +7,6 @@ namespace Green.Darts.Model
 {
     public class Federation
     {
+        public Guid Id { get; set; }
     }
 }

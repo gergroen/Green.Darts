@@ -7,5 +7,6 @@ namespace Green.Darts.Model
 {
     public class Division
     {
+        public Guid Id { get; set; }
     }
 }

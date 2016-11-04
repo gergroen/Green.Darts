@@ -8,9 +8,10 @@ using Green.Darts.Dao.EntityFrameworkCore;
 namespace Green.Darts.Migrations
 {
     [DbContext(typeof(DartsDbContext))]
-    partial class DartsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161104215225_FirstMigration")]
+    partial class FirstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")

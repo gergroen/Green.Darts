@@ -40,7 +40,7 @@ namespace Green.Darts.Api
         {
             var player = new Player
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 Name = createNewPlayerCommand.Name
             };
             _playerRepository.Save(player);
